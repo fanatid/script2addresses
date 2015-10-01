@@ -1,7 +1,7 @@
 {
   "name": "script2addresses",
   "version": "0.1.0",
-  "description": "Transform bitcoind script to bitcoin addresses",
+  "description": "Transform bitcoin script to bitcoin addresses",
   "keywords": [
     "bitcoin",
     "script",

@@ -123,7 +123,7 @@ export default function (script, network, strict) {
           nOp >= Opcode.OP_1 &&
           nOp <= Opcode.OP_16 &&
           nOp >= mOp &&
-          (nOp - Opcode.OP_1 + 1) === sChunks.length - 3 &&
+          nOp - Opcode.OP_1 === sChunks.length - 4 &&
           sChunks.slice(1, -2).every((o) => isPublicKey(o.buf, strict))) {
         let addresses = sChunks.slice(1, -2).map((o) => {
           let hashBuffer = sha256ripemd160(o.buf)

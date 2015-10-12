@@ -53,6 +53,9 @@ export default function (script, network, strict) {
   network = network || Networks.get(network) || Networks.defaultNetwork
 
   let sChunks = script.chunks
+  if (sChunks.length === 0) {
+    return {type: 'unknow'}
+  }
 
   switch (sChunks[0].opcodenum) {
     // pubkeyhash
@@ -115,7 +118,7 @@ export default function (script, network, strict) {
 
       // multisig
       let mOp = sChunks[0].opcodenum
-      let nOp = sChunks[sChunks.length - 2].opcodenum
+      let nOp = sChunks[Math.max(sChunks.length - 2, 0)].opcodenum
       if (sChunks.length >= 4 &&
           sChunks[sChunks.length - 1].opcodenum === Opcode.OP_CHECKMULTISIG &&
           mOp >= Opcode.OP_1 &&

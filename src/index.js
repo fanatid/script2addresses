@@ -49,14 +49,18 @@ function isPublicKey (buffer, strict) {
  * @return {{type: string, addresses: Array.<string>}}
  */
 export default function (script, network, strict) {
-  script = new Script(script)
-  network = network || Networks.get(network) || Networks.defaultNetwork
+  try {
+    script = new Script(script)
+  } catch (err) {
+    return {type: 'unknow'}
+  }
 
   let sChunks = script.chunks
   if (sChunks.length === 0) {
     return {type: 'unknow'}
   }
 
+  network = network || Networks.get(network) || Networks.defaultNetwork
   switch (sChunks[0].opcodenum) {
     // pubkeyhash
     case Opcode.OP_DUP:

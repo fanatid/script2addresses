@@ -1,0 +1,14 @@
+{
+  "mainnet": {
+    "pubkeyhash": 0,
+    "scripthash": 5
+  },
+  "livenet": {
+    "pubkeyhash": 0,
+    "scripthash": 5
+  },
+  "testnet": {
+    "pubkeyhash": 111,
+    "scripthash": 196
+  }
+}

@@ -27,10 +27,10 @@ export default function (buf, strict) {
   let point
   if (buf.length === 65 &&
       (buf[0] === 0x04 || buf[0] === 0x06 || buf[0] === 0x07)) {
-    point = ec.curve.point(buf.slice(1, 33).toString('hex'), buf.slice(33, 65).toString('hex'))
+    point = ec.curve.point(buf.slice(1, 33), buf.slice(33, 65))
   } else if (buf.length === 33 &&
              (buf[0] === 0x02 || buf[0] === 0x03)) {
-    point = ec.curve.pointFromX(buf.slice(1).toString('hex'), buf[0] === 0x03)
+    point = ec.curve.pointFromX(buf.slice(1), buf[0] === 0x03)
   } else {
     return false
   }
@@ -48,8 +48,7 @@ export default function (buf, strict) {
   //   y is odd if version equals 0x07
   if (buf.length === 65 &&
       (!point.validate() ||
-       ((buf[0] === 0x06 || buf[0] === 0x07) &&
-        point.y.isOdd() !== (buf[0] === 0x07)))) {
+       (buf[0] !== 0x04 && point.y.isOdd() !== (buf[0] === 0x07)))) {
     return false
   }
 

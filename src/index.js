@@ -3,6 +3,7 @@ import bs58check from 'bs58check'
 
 import networks from './networks.json'
 import opcodes from './opcodes.json'
+import isPublicKey from './publickey'
 
 /**
  * @param {Buffer} buf
@@ -22,27 +23,6 @@ function createAddress (version, hashBuffer) {
   let versionBuffer = new Buffer([version])
   let buffer = Buffer.concat([versionBuffer, hashBuffer])
   return bs58check.encode(buffer)
-}
-
-/**
- * @param {Buffer} buffer
- * @param {boolean} strict
- * @return {boolean}
- */
-function isPublicKey (buffer, strict) {
-  // TODO: need more check
-  switch (buffer[0]) {
-    case 0x02:
-    case 0x03:
-      return buffer.length === 33
-    case 0x04:
-      return buffer.length === 65
-    case 0x06:
-    case 0x07:
-      return !strict && buffer.length === 65
-    default:
-      return false
-  }
 }
 
 /**

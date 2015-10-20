@@ -1,9 +1,13 @@
 import { expect } from 'chai'
 import crypto from 'crypto'
+import { ec as EC } from 'elliptic'
 import bitcoin from 'bitcoinjs-lib'
 import bs58check from 'bs58check'
 
 import script2addresses from '../src'
+import isPublicKey from '../src/publickey'
+
+let ec = new EC('secp256k1')
 
 /**
  * @param {string} s
@@ -15,12 +19,14 @@ function asm2hex (s) {
 
 /**
  * @param {number} [version=0x03]
- * @param {number} [length=32]
+ * @param {number} [compressed=true]
  * @return {string}
  */
-function makeRandom (version = 0x03, length = 32) {
+function makeRandom (version = 0x03, compressed = true) {
   // probably can return invalid key
-  let pk = Buffer.concat([new Buffer([version]), crypto.randomBytes(length)])
+  let pk = Buffer.concat([
+    new Buffer([version]),
+    new Buffer(ec.genKeyPair().getPublic(compressed, 'hex'), 'hex').slice(1)])
   return pk.toString('hex')
 }
 
@@ -50,6 +56,85 @@ function makeP2SHAddress (hash) {
     new Buffer([bitcoin.networks.bitcoin.scriptHash]), new Buffer(hash, 'hex')]))
 }
 
+describe('isPublicKey', () => {
+  describe('strict', () => {
+    it('version is 0x01, length is 33', () => {
+      let publicKey = new Buffer(makeRandom(0x01, true), 'hex')
+      expect(isPublicKey(publicKey, true)).to.be.false
+    })
+
+    it('version is 0x05, length is 65', () => {
+      let publicKey = new Buffer(makeRandom(0x05, false), 'hex')
+      expect(isPublicKey(publicKey, true)).to.be.false
+    })
+
+    it('invalid point because x is zero', () => {
+      let publicKey = new Buffer([2].concat(Array(32).fill(0)))
+      expect(isPublicKey(publicKey, true)).to.be.false
+    })
+
+    it('invalid point because x greater then p', () => {
+      let publicKey = new Buffer('03fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc30', 'hex')
+      expect(isPublicKey(publicKey, true)).to.be.false
+    })
+
+    it('invalid point because y is bad', () => {
+      let publicKey = new Buffer(makeRandom(0x04, false), 'hex')
+      publicKey[publicKey.length - 1] += 1
+      expect(isPublicKey(publicKey, true)).to.be.false
+    })
+
+    it('invalid point because y is not odd', () => {
+      let pair = ec.genKeyPair()
+      let publicKey = new Buffer(pair.getPublic(false, 'hex'), 'hex')
+      publicKey[0] = pair.getPublic().y.isOdd() ? 0x06 : 0x07
+      expect(isPublicKey(publicKey, true)).to.be.false
+    })
+
+    it('valid point (compressed)', () => {
+      let publicKey = new Buffer(makeRandom(0x03, true), 'hex')
+      expect(isPublicKey(publicKey, true)).to.be.true
+    })
+
+    it('valid point (uncompressed)', () => {
+      let publicKey = new Buffer(makeRandom(0x04, false), 'hex')
+      expect(isPublicKey(publicKey, true)).to.be.true
+    })
+  })
+
+  describe('not strict', () => {
+    it('version is 0x01, length is 33', () => {
+      let publicKey = new Buffer(makeRandom(0x01, true), 'hex')
+      expect(isPublicKey(publicKey, false)).to.be.false
+    })
+
+    it('version is 0x02, length is 65', () => {
+      let publicKey = new Buffer(makeRandom(0x02, false), 'hex')
+      expect(isPublicKey(publicKey, false)).to.be.false
+    })
+
+    it('version is 0x03, length is 33', () => {
+      let publicKey = new Buffer(makeRandom(0x03, true), 'hex')
+      expect(isPublicKey(publicKey, false)).to.be.true
+    })
+
+    it('version is 0x04, length is 33', () => {
+      let publicKey = new Buffer(makeRandom(0x04, true), 'hex')
+      expect(isPublicKey(publicKey, false)).to.be.false
+    })
+
+    it('version is 0x06, length is 65', () => {
+      let publicKey = new Buffer(makeRandom(0x06, false), 'hex')
+      expect(isPublicKey(publicKey, false)).to.be.true
+    })
+
+    it('version is 0x07, length is 65', () => {
+      let publicKey = new Buffer(makeRandom(0x07, false), 'hex')
+      expect(isPublicKey(publicKey, false)).to.be.true
+    })
+  })
+})
+
 describe('script2addresses', () => {
   describe('arguments', () => {
     it('not a buffer and neither a string', () => {
@@ -73,10 +158,6 @@ describe('script2addresses', () => {
         addresses: [makeP2PKHAddress(makeHash(pkHex))]
       })
     })
-  })
-
-  describe('isPublicKey', () => {
-    // TODO
   })
 
   describe('pubkeyhash', () => {
@@ -225,7 +306,7 @@ describe('script2addresses', () => {
 
   describe('pubkey', () => {
     it('{data (33 bytes)} OP_CHECKSIG', () => {
-      let pkHex = makeRandom(0x03, 32)
+      let pkHex = makeRandom(0x03, true)
       let script = asm2hex(`${pkHex} OP_CHECKSIG`)
       expect(script2addresses(script)).to.deep.equal({
         type: 'pubkey',
@@ -234,7 +315,7 @@ describe('script2addresses', () => {
     })
 
     it('{data (65 bytes)} OP_CHECKSIG', () => {
-      let pkHex = makeRandom(0x04, 64)
+      let pkHex = makeRandom(0x04, false)
       let script = asm2hex(`${pkHex} OP_CHECKSIG`)
       expect(script2addresses(script)).to.deep.equal({
         type: 'pubkey',

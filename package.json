@@ -1,6 +1,6 @@
 {
   "name": "script2addresses",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "Transform bitcoin script to bitcoin addresses",
   "keywords": [
     "bitcoin",
@@ -33,7 +33,7 @@
   "scripts": {
     "prepublish": "npm run clean && npm run compile",
     "clean": "rm -rf lib/*",
-    "compile": "babel --optional runtime -d lib src",
+    "compile": "babel --optional runtime -d lib src -D",
     "coverage": "istanbul cover _mocha -- --compilers js:babel/register test/*.js",
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "eslint src test",
@@ -43,8 +43,10 @@
   },
   "dependencies": {
     "babel-runtime": "^5.8.20",
+    "bn.js": "^3.2.0",
     "bs58check": "^1.0.6",
-    "create-hash": "^1.1.2"
+    "create-hash": "^1.1.2",
+    "elliptic": "^5.1.0"
   },
   "devDependencies": {
     "babel": "^5.8.21",

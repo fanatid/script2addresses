@@ -1,15 +1,14 @@
-import elliptic from 'elliptic'
-import BN from 'bn.js'
+var BN = require('bn.js')
+var ec = require('elliptic').curves.secp256k1
 
-let ec = elliptic.curves.secp256k1
-let zero = new BN(0)
+var zero = new BN(0)
 
 /**
  * @param {Buffer} buf
  * @param {boolean} [strict=false]
  * @return {boolean}
  */
-export default function (buf, strict) {
+module.exports = function (buf, strict) {
   if (!strict) {
     switch (buf[0]) {
       case 0x02:
@@ -24,7 +23,7 @@ export default function (buf, strict) {
     }
   }
 
-  let point
+  var point
   if (buf.length === 65 &&
       (buf[0] === 0x04 || buf[0] === 0x06 || buf[0] === 0x07)) {
     point = ec.curve.point(buf.slice(1, 33), buf.slice(33, 65))
@@ -42,10 +41,10 @@ export default function (buf, strict) {
   }
 
   // Only for uncompressed,
-  //   make sure that y equals value calculated through x
+  //   make sure that given y values match with value calculated through x
   //     point.y.cmp(ec.curve.pointFromX(point.x, point.y.isOdd()).y) !== 0
-  //     but point.validate() just is faster
-  //   y is odd if version equals 0x07
+  //     but point.validate() is faster
+  //   y should be odd if version 0x07 or not if version is 0x06
   if (buf.length === 65 &&
       (!point.validate() ||
        (buf[0] !== 0x04 && point.y.isOdd() !== (buf[0] === 0x07)))) {

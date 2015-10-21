@@ -1,9 +1,9 @@
-import createHash from 'create-hash'
-import bs58check from 'bs58check'
+var createHash = require('create-hash')
+var bs58check = require('bs58check')
 
-import networks from './networks.json'
-import opcodes from './opcodes.json'
-import isPublicKey from './publickey'
+var networks = require('./networks.json')
+var opcodes = require('./opcodes.json')
+var isPublicKey = require('./publickey')
 
 /**
  * @param {Buffer} buf
@@ -20,8 +20,8 @@ function sha256ripemd160 (buf) {
  * @return {string}
  */
 function createAddress (version, hashBuffer) {
-  let versionBuffer = new Buffer([version])
-  let buffer = Buffer.concat([versionBuffer, hashBuffer])
+  var versionBuffer = new Buffer([version])
+  var buffer = Buffer.concat([versionBuffer, hashBuffer])
   return bs58check.encode(buffer)
 }
 
@@ -32,7 +32,7 @@ function createAddress (version, hashBuffer) {
  * @return {?{bytes: number, size: number}}
  */
 function readDataSize (buf, offset, strict) {
-  let opcode = buf[offset]
+  var opcode = buf[offset]
 
   if ((strict && opcode >= opcodes.OP_PUSHDATA1) ||
       opcode > opcodes.OP_PUSHDATA4 ||
@@ -58,7 +58,7 @@ function readDataSize (buf, offset, strict) {
  * @param {boolean} [strict=false]
  * @return {{type: string, addresses: Array.<string>}}
  */
-export default function (buf, network, strict) {
+module.exports = function (buf, network, strict) {
   if (!Buffer.isBuffer(buf)) {
     try {
       buf = new Buffer(buf, 'hex')
@@ -75,7 +75,7 @@ export default function (buf, network, strict) {
     network = networks.mainnet
   }
 
-  let dataSize
+  var dataSize
   switch (buf[0]) {
     // pubkeyhash
     case opcodes.OP_DUP:
@@ -142,15 +142,15 @@ export default function (buf, network, strict) {
       }
 
       // multisig
-      let mOp = buf[0]
-      let nOp = buf[buf.length - 2]
-      let isMultisig = (buf[buf.length - 1] === opcodes.OP_CHECKMULTISIG &&
+      var mOp = buf[0]
+      var nOp = buf[buf.length - 2]
+      var isMultisig = (buf[buf.length - 1] === opcodes.OP_CHECKMULTISIG &&
                         mOp >= opcodes.OP_1 &&
                         nOp <= opcodes.OP_16 &&
                         nOp >= mOp)
 
-      let pubKeys = []
-      for (let offset = 1, stop = buf.length - 2; isMultisig && offset < stop;) {
+      var pubKeys = []
+      for (var offset = 1, stop = buf.length - 2; isMultisig && offset < stop;) {
         dataSize = readDataSize(buf, offset, strict)
         if (dataSize === null) {
           isMultisig = false
@@ -162,12 +162,12 @@ export default function (buf, network, strict) {
       }
 
       if (isMultisig && pubKeys.length === nOp - opcodes.OP_1 + 1) {
-        let addresses = pubKeys.map((pubKey) => {
+        var addresses = pubKeys.map(function (pubKey) {
           return createAddress(network.pubkeyhash, sha256ripemd160(pubKey))
         })
         return {
           type: 'multisig',
-          addresses: addresses.filter((addr, index) => {
+          addresses: addresses.filter(function (addr, index) {
             return addresses.indexOf(addr) === index
           })
         }

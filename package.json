@@ -1,6 +1,6 @@
 {
   "name": "script2addresses",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Transform bitcoin script to bitcoin addresses",
   "keywords": [
     "bitcoin",
@@ -20,46 +20,37 @@
     "email": "fanatid@ya.ru"
   },
   "files": [
-    "lib",
     "src",
     "LICENSE",
     "README.md"
   ],
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/fanatid/script2addresses.git"
   },
   "scripts": {
-    "prepublish": "npm run clean && npm run compile",
-    "clean": "rm -rf lib/*",
-    "compile": "babel --optional runtime -d lib src -D",
-    "coverage": "istanbul cover _mocha -- --compilers js:babel/register test/*.js",
+    "coverage": "istanbul cover _mocha -- test/*.js",
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "eslint src test",
     "test": "npm run test:node && npm run test:browser",
     "test:browser": "karma start karma.conf.js",
-    "test:node": "istanbul test mocha -- --compilers js:babel/register --reporter spec test/*.js"
+    "test:node": "istanbul test mocha -- --reporter spec test/*.js"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.20",
     "bn.js": "^3.2.0",
     "bs58check": "^1.0.6",
     "create-hash": "^1.1.2",
     "elliptic": "^5.1.0"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babel-core": "^5.8.22",
-    "babel-eslint": "^4.0.5",
-    "babelify": "^6.1.3",
     "bitcoinjs-lib": "^2.1.1",
     "chai": "^3.2.0",
     "coveralls": "^2.11.3",
     "eslint": "^1.0.0",
-    "eslint-config-standard": "^4.0.0",
+    "eslint-config-standard": "^4.4.0",
     "eslint-plugin-standard": "^1.2.0",
-    "istanbul": "^0.3.17",
+    "istanbul": "^0.4.0",
     "karma": "^0.13.8",
     "karma-browserify": "^4.3.0",
     "karma-chrome-launcher": "^0.2.0",
@@ -67,5 +58,8 @@
     "karma-firefox-launcher": "^0.1.6",
     "karma-mocha": "^0.2.0",
     "mocha": "^2.2.5"
+  },
+  "engines": {
+    "node": ">=0.12"
   }
 }

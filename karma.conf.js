@@ -2,7 +2,6 @@ module.exports = function (config) {
   config.set({
     frameworks: ['browserify', 'detectBrowsers', 'mocha'],
     files: [
-      'node_modules/babel-core/browser-polyfill.js',
       'test/*.js'
     ],
     preprocessors: {
@@ -17,10 +16,7 @@ module.exports = function (config) {
       'karma-mocha'
     ],
     browserify: {
-      debug: true,
-      transform: [
-        ['babelify']
-      ]
+      debug: true
     },
     detectBrowsers: {
       enabled: true,

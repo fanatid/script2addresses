@@ -1,11 +1,11 @@
 # script2addresses
 
-[![build status](https://img.shields.io/travis/fanatid/script2addresses.svg?branch=master&style=flat-square)](http://travis-ci.org/fanatid/script2addresses)
+[![NPM Package](https://img.shields.io/npm/v/script2addresses.svg?style=flat-square)](https://www.npmjs.org/package/script2addresses)
+[![Build Status](https://img.shields.io/travis/fanatid/script2addresses.svg?branch=master&style=flat-square)](https://travis-ci.org/fanatid/script2addresses)
 [![Coverage Status](https://img.shields.io/coveralls/fanatid/script2addresses.svg?style=flat-square)](https://coveralls.io/r/fanatid/script2addresses)
 [![Dependency status](https://img.shields.io/david/fanatid/script2addresses.svg?style=flat-square)](https://david-dm.org/fanatid/script2addresses#info=dependencies)
 [![Dev Dependency status](https://img.shields.io/david/fanatid/script2addresses.svg?style=flat-square)](https://david-dm.org/fanatid/script2addresses#info=devDependencies)
 
-[![NPM](https://nodei.co/npm/script2addresses.png)](https://www.npmjs.com/package/script2addresses)
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ## Installation

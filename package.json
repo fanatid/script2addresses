@@ -1,6 +1,6 @@
 {
   "name": "script2addresses",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Transform bitcoin script to bitcoin addresses",
   "keywords": [
     "bitcoin",
@@ -15,13 +15,9 @@
     "url": "https://github.com/fanatid/script2addresses/issues"
   },
   "license": "MIT",
-  "author": {
-    "name": "Kirill Fomichev",
-    "email": "fanatid@ya.ru"
-  },
+  "author": "Kirill Fomichev <fanatid@ya.ru>",
   "files": [
     "src",
-    "LICENSE",
     "README.md"
   ],
   "main": "./src/index.js",
@@ -58,7 +54,7 @@
     "standard": "^5.4.1"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=0.10"
   },
   "standard": {
     "globals": [

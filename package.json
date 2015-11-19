@@ -38,15 +38,15 @@
     "test:node": "istanbul test mocha -- --reporter spec test/*.js"
   },
   "dependencies": {
-    "bn.js": "^3.2.0",
     "bs58check": "^1.0.6",
     "create-hash": "^1.1.2",
-    "elliptic": "^5.1.0"
+    "secp256k1": "^2.0.5"
   },
   "devDependencies": {
     "bitcoinjs-lib": "^2.1.1",
     "chai": "^3.2.0",
     "coveralls": "^2.11.3",
+    "elliptic": "^6.0.2",
     "eslint": "^1.0.0",
     "eslint-config-standard": "^4.4.0",
     "eslint-plugin-standard": "^1.2.0",

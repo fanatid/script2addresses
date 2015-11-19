@@ -76,13 +76,6 @@ describe('isPublicKey', function () {
       expect(isPublicKey(publicKey, true)).to.be.false
     })
 
-    it('invalid point because x is zero', function () {
-      var publicKey = new Buffer(33)
-      publicKey[0] = 2
-      publicKey.fill(0, 1)
-      expect(isPublicKey(publicKey, true)).to.be.false
-    })
-
     it('invalid point because x greater then p', function () {
       var publicKey = new Buffer('03fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc30', 'hex')
       expect(isPublicKey(publicKey, true)).to.be.false

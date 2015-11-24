@@ -18,6 +18,7 @@
   "author": "Kirill Fomichev <fanatid@ya.ru>",
   "files": [
     "src",
+    "LICENSE",
     "README.md"
   ],
   "main": "./src/index.js",

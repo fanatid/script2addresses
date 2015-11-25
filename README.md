@@ -12,13 +12,31 @@
 npm install script2addresses
 ```
 
-## Examples
+## API
+
+ - [`script2addresses`](#script2addresses)
+
+----
+
+#####`script2addresses`
+
+Arguments:
+
+  * `script` - output script as string or buffer
+  * `network` - network params or string (livenet, mainnet, testnet), mainnet by default
+  * `strict` - not allow pushdata opcodes in script, false by default
+
+Returns an object with the following keys:
+  * `type` - output script type: unknow, nulldata, pubkeyhash, scripthash, pubkey or multisig
+  * `addresses` - array of strings
+
+## Example
 
 ```js
 var script2addresses = require('script2addresses')
-var bitcoin = require('bitcoinjs-lib')
 
-var script = bitcoin.script.fromASM('OP_2 032069e003dcc548bc7de5e2623a3f3716873cd08764f1ab9e16fc1ca69bee6aa5 0386acd4c6ffd015e71c0e3f535c3b6e70a777908cc31695de660846c87cf88ef3 OP_2 OP_CHECKMULTISIG')
+// OP_2 032069e003dcc548bc7de5e2623a3f3716873cd08764f1ab9e16fc1ca69bee6aa5 0386acd4c6ffd015e71c0e3f535c3b6e70a777908cc31695de660846c87cf88ef3 OP_2 OP_CHECKMULTISIG'
+var script = '5221032069e003dcc548bc7de5e2623a3f3716873cd08764f1ab9e16fc1ca69bee6aa5210386acd4c6ffd015e71c0e3f535c3b6e70a777908cc31695de660846c87cf88ef352ae'
 console.log(script2addresses(script))
 // {
 //   type: 'multisig',

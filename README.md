@@ -12,6 +12,33 @@
 npm install script2addresses
 ```
 
+## Script type and addresses
+
+  - [`pubkey`](#pubkey)
+  - [`pubkeyhash`](#pubkeyhash)
+  - [`scripthash`](#scripthash)
+  - [`multisig`](#multisig)
+
+#####`pubkey`
+
+{PublicKey} OP_CHECKSIG
+
+\**This is only public key, but we can derive P2PKH address*
+
+#####`pubkeyhash`
+
+OP_DUP OP_HASH160 {PublicKeyHash} OP_EQUALVERIFY OP_CHECKSIG
+
+#####`scripthash`
+
+OP_HASH160 {scriptHash} OP_EQUAL
+
+#####`multisig`
+
+m [PublicKeys ...] n OP_CHECKMULTISIG
+
+\**This is only public keys, but we can derive P2PKH addresses*
+
 ## API
 
  - [`script2addresses`](#script2addresses)
